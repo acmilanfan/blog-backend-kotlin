@@ -6,4 +6,4 @@
 * Maven 3.5.4 (wrapper)
 * Docker-maven-plugin 0.28.0 (fabric8)
 * PostgreSQL 11.1
-* Hibernate 5.4.1
+* Hibernate 5.3.7
