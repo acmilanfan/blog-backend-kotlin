@@ -7,16 +7,16 @@ import javax.persistence.*
 data class Post(
        @Id
        @GeneratedValue(strategy = GenerationType.IDENTITY)
-       val id: Long,
+       val id: Long = 0,
 
        val content: String,
 
        val author: String,
 
-       val rating: Int,
+       val rating: Int = 0,
 
        val preview: String,
 
        @Column
-       val creationDate: LocalDateTime
+       val creationDate: LocalDateTime = LocalDateTime.now()
 )
