@@ -15,6 +15,16 @@ class PostController(private val postService: PostService) {
 
     @PostMapping
     fun create(@RequestBody post: Post) {
-        postService.createPost(post)
+        postService.createOrUpdatePost(post)
+    }
+
+    @DeleteMapping("/{id}")
+    fun delete(@PathVariable id: Long) {
+        postService.deletePost(id)
+    }
+
+    @PutMapping
+    fun update(@RequestBody post: Post) {
+        postService.createOrUpdatePost(post)
     }
 }

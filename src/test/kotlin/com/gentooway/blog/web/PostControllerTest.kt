@@ -15,8 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDate
 
@@ -79,7 +78,6 @@ class PostControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(post)))
                 .andExpect(status().isOk)
-                .andReturn()
 
         // then
         val posts = postRepository.findAll()
@@ -93,5 +91,57 @@ class PostControllerTest {
         assertThat(addedPost.rating, Is(equalTo(0)))
         assertThat(addedPost.creationDate.toLocalDate(), Is(equalTo(LocalDate.now())))
         assertThat(addedPost.id, Is(notNullValue()))
+    }
+
+    @Test
+    internal fun `should delete post`() {
+        // given
+        val post = Post(
+                content = "test123",
+                author = "test",
+                preview = "123",
+                tags = "tag1")
+        postRepository.save(post)
+
+        // when
+        mvc.perform(delete("/post/${post.id}"))
+                .andExpect(status().isOk)
+
+        // then
+        val posts = postRepository.findAll()
+        assertThat(posts.size, Is(equalTo(0)))
+    }
+
+    @Test
+    internal fun `should update post`() {
+        // given
+        val post = Post(
+                content = "test123",
+                author = "test",
+                preview = "123",
+                tags = "tag1")
+        postRepository.save(post)
+
+        val updatedPost = Post(
+                id = post.id,
+                content = "test12355555",
+                author = "test",
+                preview = "123555555",
+                tags = "tag1;tag3")
+
+        // when
+        mvc.perform(put("/post")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(objectMapper.writeValueAsString(updatedPost)))
+                .andExpect(status().isOk)
+
+        // then
+        val posts = postRepository.findAll()
+        assertThat(posts.size, Is(equalTo(1)))
+
+        val savedPost = posts.get(0)
+        assertThat(savedPost.content, Is(equalTo(updatedPost.content)))
+        assertThat(savedPost.preview, Is(equalTo(updatedPost.preview)))
+        assertThat(savedPost.tags, Is(equalTo(updatedPost.tags)))
     }
 }

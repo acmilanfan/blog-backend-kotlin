@@ -11,7 +11,11 @@ class PostService(private val postRepository: PostRepository) {
         return postRepository.findAll()
     }
 
-    fun createPost(post: Post) {
+    fun createOrUpdatePost(post: Post) {
         postRepository.save(post)
+    }
+
+    fun deletePost(id: Long) {
+        postRepository.deleteById(id)
     }
 }
