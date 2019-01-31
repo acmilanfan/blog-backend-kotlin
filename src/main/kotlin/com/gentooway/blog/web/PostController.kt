@@ -27,4 +27,9 @@ class PostController(private val postService: PostService) {
     fun update(@RequestBody post: Post) {
         postService.createOrUpdatePost(post)
     }
+
+    @GetMapping("/{author}")
+    fun getByAuthor(@PathVariable author: String): List<Post> {
+        return postService.getByAuthor(author)
+    }
 }

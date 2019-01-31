@@ -18,4 +18,8 @@ class PostService(private val postRepository: PostRepository) {
     fun deletePost(id: Long) {
         postRepository.deleteById(id)
     }
+
+    fun getByAuthor(author: String): List<Post> {
+        return postRepository.getAllByAuthor(author)
+    }
 }

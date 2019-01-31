@@ -144,4 +144,36 @@ class PostControllerTest {
         assertThat(savedPost.preview, Is(equalTo(updatedPost.preview)))
         assertThat(savedPost.tags, Is(equalTo(updatedPost.tags)))
     }
+
+    @Test
+    internal fun `should return author posts`() {
+        // given
+        val testAuthor = "test"
+
+        val post = Post(
+                content = "test123",
+                author = testAuthor,
+                preview = "123",
+                tags = "tag1")
+        postRepository.save(post)
+
+        val secondPost = Post(
+                content = "test12355555",
+                author = "test1",
+                preview = "123555555",
+                tags = "tag1;tag3")
+        postRepository.save(secondPost)
+
+        // when
+        val mvcResult = mvc.perform(get("/post/$testAuthor" ))
+                .andExpect(status().isOk)
+                .andReturn()
+
+        // then
+        val posts = objectMapper.readValue<List<Post>>(mvcResult.response.contentAsString)
+        assertThat(posts.size, Is(equalTo(1)))
+
+        val foundPost = posts.get(0)
+        assertThat(foundPost.id, Is(equalTo(post.id)))
+    }
 }

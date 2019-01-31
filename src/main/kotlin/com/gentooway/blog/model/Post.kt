@@ -1,5 +1,6 @@
 package com.gentooway.blog.model
 
+import java.io.Serializable
 import java.time.LocalDateTime
 import javax.persistence.*
 
@@ -21,4 +22,4 @@ data class Post(
 
         @Column
         val creationDate: LocalDateTime = LocalDateTime.now()
-)
+) : Serializable
