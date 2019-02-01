@@ -20,6 +20,8 @@ data class Post(
 
         val tags: String,
 
-        @Column
-        val creationDate: LocalDateTime = LocalDateTime.now()
+        @Column(name = "CREATION_DATE")
+        val creationDate: LocalDateTime = LocalDateTime.now(),
+
+        val displayed: Boolean = false
 ) : Serializable

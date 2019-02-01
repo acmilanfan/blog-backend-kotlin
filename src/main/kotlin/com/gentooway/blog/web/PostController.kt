@@ -32,4 +32,9 @@ class PostController(private val postService: PostService) {
     fun getByAuthor(@PathVariable author: String): List<Post> {
         return postService.getByAuthor(author)
     }
+
+    @PostMapping("/{id}/displayed")
+    fun changeDisplayed(@PathVariable id: Long) {
+        postService.changeDisplayed(id)
+    }
 }

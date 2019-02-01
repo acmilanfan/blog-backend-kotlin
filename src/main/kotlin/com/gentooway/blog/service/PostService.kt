@@ -3,8 +3,10 @@ package com.gentooway.blog.service
 import com.gentooway.blog.model.Post
 import com.gentooway.blog.repository.PostRepository
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
+@Transactional
 class PostService(private val postRepository: PostRepository) {
 
     fun getAllPosts(): List<Post> {
@@ -21,5 +23,14 @@ class PostService(private val postRepository: PostRepository) {
 
     fun getByAuthor(author: String): List<Post> {
         return postRepository.getAllByAuthor(author)
+    }
+
+    fun changeDisplayed(id: Long) {
+        val post = postRepository.findById(id)
+                .orElseThrow { IllegalArgumentException("123") }
+
+        val updated = post.copy(displayed = !post.displayed)
+
+        postRepository.save(updated)
     }
 }
