@@ -33,4 +33,8 @@ class PostService(private val postRepository: PostRepository) {
 
         postRepository.save(updated)
     }
+
+    fun getDisplayedPosts(): List<Post> {
+        return postRepository.getAllByDisplayedTrue()
+    }
 }

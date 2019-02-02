@@ -165,7 +165,7 @@ class PostControllerTest {
         postRepository.save(secondPost)
 
         // when
-        val mvcResult = mvc.perform(get("/post/$testAuthor" ))
+        val mvcResult = mvc.perform(get("/post/$testAuthor"))
                 .andExpect(status().isOk)
                 .andReturn()
 
@@ -198,5 +198,38 @@ class PostControllerTest {
 
         val savedPost = posts.get(0)
         assertThat(savedPost.displayed, Is(equalTo(false)))
+    }
+
+    @Test
+    internal fun `should return only displayed posts`() {
+        // given
+        val post = Post(
+                content = "test123",
+                author = "test",
+                preview = "123",
+                tags = "tag1",
+                displayed = true)
+        postRepository.save(post)
+
+        val notDisplayedPost = Post(
+                content = "testewq",
+                author = "test",
+                preview = "321",
+                tags = "tagw",
+                displayed = false)
+        postRepository.save(notDisplayedPost)
+
+        // when
+        val mvcResult = mvc.perform(get("/post/displayed"))
+                .andExpect(status().isOk)
+                .andReturn()
+
+        // then
+        val posts = objectMapper.readValue<List<Post>>(mvcResult.response.contentAsString)
+        assertThat(posts.size, Is(equalTo(1)))
+
+        val foundPost = posts.get(0)
+        assertThat(foundPost.id, Is(equalTo(post.id)))
+        assertThat(foundPost.displayed, Is(equalTo(true)))
     }
 }

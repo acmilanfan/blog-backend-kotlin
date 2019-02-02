@@ -9,7 +9,6 @@
 * Hibernate 5.3.7
 
 **TODOs:**
-* Add endpoint to get only displayed posts
 * Implement liking a post
 * Implement disliking a post
 * Implement sorting posts by date

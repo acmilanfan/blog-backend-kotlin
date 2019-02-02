@@ -37,4 +37,9 @@ class PostController(private val postService: PostService) {
     fun changeDisplayed(@PathVariable id: Long) {
         postService.changeDisplayed(id)
     }
+
+    @GetMapping("/displayed")
+    fun getDisplayedPosts(): List<Post> {
+        return postService.getDisplayedPosts()
+    }
 }
