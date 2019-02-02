@@ -9,7 +9,6 @@
 * Hibernate 5.3.7
 
 **TODOs:**
-* Test /post/{id}/displayed method
 * Add endpoint to get only displayed posts
 * Implement liking a post
 * Implement disliking a post
@@ -24,4 +23,5 @@
 * Implement liking a comment
 * Implement disliking a comment
 * Implement sorting comments by rating
+* Wrap every exception in json with 5xx or 4xx responses codes (ControllerAdvice)
 * ??? to be continued

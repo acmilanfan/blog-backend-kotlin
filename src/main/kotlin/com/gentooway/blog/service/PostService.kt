@@ -27,7 +27,7 @@ class PostService(private val postRepository: PostRepository) {
 
     fun changeDisplayed(id: Long) {
         val post = postRepository.findById(id)
-                .orElseThrow { IllegalArgumentException("123") }
+                .orElseThrow { IllegalArgumentException("Post with the given id not found") }
 
         val updated = post.copy(displayed = !post.displayed)
 

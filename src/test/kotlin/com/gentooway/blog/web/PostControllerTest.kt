@@ -176,4 +176,27 @@ class PostControllerTest {
         val foundPost = posts.get(0)
         assertThat(foundPost.id, Is(equalTo(post.id)))
     }
+
+    @Test
+    internal fun `should switch displayed value`() {
+        // given
+        val post = Post(
+                content = "test123",
+                author = "test",
+                preview = "123",
+                tags = "tag1",
+                displayed = true)
+        postRepository.save(post)
+
+        // when
+        mvc.perform(get("/post/${post.id}/displayed"))
+                .andExpect(status().isOk)
+
+        // then
+        val posts = postRepository.findAll()
+        assertThat(posts.size, Is(equalTo(1)))
+
+        val savedPost = posts.get(0)
+        assertThat(savedPost.displayed, Is(equalTo(false)))
+    }
 }
