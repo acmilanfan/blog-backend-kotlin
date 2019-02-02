@@ -47,4 +47,9 @@ class PostController(private val postService: PostService) {
     fun like(@PathVariable id: Long) {
         postService.like(id)
     }
+
+    @PutMapping("/{id}/dislike")
+    fun dislike(@PathVariable id: Long) {
+        postService.dislike(id)
+    }
 }

@@ -9,8 +9,6 @@
 * Hibernate 5.3.7
 
 **TODOs:**
-* Implement liking a post
-* Implement disliking a post
 * Implement sorting posts by date
 * Implement sorting posts by rating
 * Implement the comment entity

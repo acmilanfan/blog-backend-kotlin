@@ -255,4 +255,27 @@ class PostControllerTest {
         val savedPost = posts.get(0)
         assertThat(savedPost.rating, Is(equalTo(2)))
     }
+
+    @Test
+    internal fun `should dislike a post`() {
+        // given
+        val post = Post(
+                content = "test123",
+                author = "test",
+                preview = "123",
+                tags = "tag1",
+                rating = 5)
+        postRepository.save(post)
+
+        // when
+        mvc.perform(put("/post/${post.id}/dislike"))
+                .andExpect(status().isOk)
+
+        // then
+        val posts = postRepository.findAll()
+        assertThat(posts.size, Is(equalTo(1)))
+
+        val savedPost = posts.get(0)
+        assertThat(savedPost.rating, Is(equalTo(4)))
+    }
 }

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.*
 import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import java.util.*
 
@@ -39,12 +40,24 @@ internal class PostServiceTest {
     }
 
     @Test
-    internal fun `should throw exception when post not found while liking post`() {
+    internal fun `should throw exception when post not found while liking a post`() {
         // given
         Mockito.`when`(postRepository.findById(any())).thenReturn(Optional.empty())
 
         // when
         val executable = { postService.like(123L) }
+
+        // then
+        assertThrows<IllegalArgumentException>(executable)
+    }
+
+    @Test
+    internal fun `should throw exception when post not found while disliking a post`() {
+        // given
+        Mockito.`when`(postRepository.findById(any())).thenReturn(Optional.empty())
+
+        // when
+        val executable = { postService.dislike(123L) }
 
         // then
         assertThrows<IllegalArgumentException>(executable)
@@ -92,5 +105,44 @@ internal class PostServiceTest {
         verify(postRepository).save(captor.capture())
 
         assertThat(captor.value.rating, Is(equalTo(11)))
+    }
+
+    @Test
+    internal fun `should decrement post rating`() {
+        // given
+        val post = Post(content = "test123",
+                author = "test",
+                preview = "123",
+                tags = "tag1",
+                rating = 10)
+
+        Mockito.`when`(postRepository.findById(any())).thenReturn(Optional.ofNullable(post))
+
+        // when
+        postService.dislike(123L)
+
+        // then
+        val captor: ArgumentCaptor<Post> = ArgumentCaptor.forClass(Post::class.java)
+
+        verify(postRepository).save(captor.capture())
+
+        assertThat(captor.value.rating, Is(equalTo(9)))
+    }
+
+    @Test
+    internal fun `should not decrement if post rating is zero`() {
+        // given
+        val post = Post(content = "test123",
+                author = "test",
+                preview = "123",
+                tags = "tag1")
+
+        Mockito.`when`(postRepository.findById(any())).thenReturn(Optional.ofNullable(post))
+
+        // when
+        postService.dislike(123L)
+
+        // then
+        verify(postRepository, never()).save(any())
     }
 }

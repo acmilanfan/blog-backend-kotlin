@@ -45,6 +45,15 @@ class PostService(private val postRepository: PostRepository) {
         postRepository.save(updated)
     }
 
+    fun dislike(id: Long) {
+        val post = retrievePost(id)
+
+        if (post.rating > 0) {
+            val updated = post.copy(rating = post.rating.dec())
+            postRepository.save(updated)
+        }
+    }
+
     private fun retrievePost(id: Long) = postRepository.findById(id)
             .orElseThrow { IllegalArgumentException("Post with the given id not found") }
 }
