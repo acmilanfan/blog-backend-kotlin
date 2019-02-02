@@ -33,7 +33,7 @@ class PostController(private val postService: PostService) {
         return postService.getByAuthor(author)
     }
 
-    @GetMapping("/{id}/displayed")
+    @PutMapping("/{id}/displayed")
     fun changeDisplayed(@PathVariable id: Long) {
         postService.changeDisplayed(id)
     }
@@ -41,5 +41,10 @@ class PostController(private val postService: PostService) {
     @GetMapping("/displayed")
     fun getDisplayedPosts(): List<Post> {
         return postService.getDisplayedPosts()
+    }
+
+    @PutMapping("/{id}/like")
+    fun like(@PathVariable id: Long) {
+        postService.like(id)
     }
 }

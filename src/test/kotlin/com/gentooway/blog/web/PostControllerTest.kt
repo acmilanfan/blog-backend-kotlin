@@ -189,7 +189,7 @@ class PostControllerTest {
         postRepository.save(post)
 
         // when
-        mvc.perform(get("/post/${post.id}/displayed"))
+        mvc.perform(put("/post/${post.id}/displayed"))
                 .andExpect(status().isOk)
 
         // then
@@ -231,5 +231,28 @@ class PostControllerTest {
         val foundPost = posts.get(0)
         assertThat(foundPost.id, Is(equalTo(post.id)))
         assertThat(foundPost.displayed, Is(equalTo(true)))
+    }
+
+    @Test
+    internal fun `should like a post`() {
+        // given
+        val post = Post(
+                content = "test123",
+                author = "test",
+                preview = "123",
+                tags = "tag1",
+                rating = 1)
+        postRepository.save(post)
+
+        // when
+        mvc.perform(put("/post/${post.id}/like"))
+                .andExpect(status().isOk)
+
+        // then
+        val posts = postRepository.findAll()
+        assertThat(posts.size, Is(equalTo(1)))
+
+        val savedPost = posts.get(0)
+        assertThat(savedPost.rating, Is(equalTo(2)))
     }
 }

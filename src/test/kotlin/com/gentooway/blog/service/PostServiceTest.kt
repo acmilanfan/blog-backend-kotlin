@@ -27,12 +27,24 @@ internal class PostServiceTest {
     }
 
     @Test
-    internal fun `should throw exception when post not found`() {
+    internal fun `should throw exception when post not found while changing displayed`() {
         // given
         Mockito.`when`(postRepository.findById(any())).thenReturn(Optional.empty())
 
         // when
         val executable = { postService.changeDisplayed(123L) }
+
+        // then
+        assertThrows<IllegalArgumentException>(executable)
+    }
+
+    @Test
+    internal fun `should throw exception when post not found while liking post`() {
+        // given
+        Mockito.`when`(postRepository.findById(any())).thenReturn(Optional.empty())
+
+        // when
+        val executable = { postService.like(123L) }
 
         // then
         assertThrows<IllegalArgumentException>(executable)
@@ -58,5 +70,27 @@ internal class PostServiceTest {
         verify(postRepository).save(captor.capture())
 
         assertThat(captor.value.displayed, Is(equalTo(false)))
+    }
+
+    @Test
+    internal fun `should increment post rating`() {
+        // given
+        val post = Post(content = "test123",
+                author = "test",
+                preview = "123",
+                tags = "tag1",
+                rating = 10)
+
+        Mockito.`when`(postRepository.findById(any())).thenReturn(Optional.ofNullable(post))
+
+        // when
+        postService.like(123L)
+
+        // then
+        val captor: ArgumentCaptor<Post> = ArgumentCaptor.forClass(Post::class.java)
+
+        verify(postRepository).save(captor.capture())
+
+        assertThat(captor.value.rating, Is(equalTo(11)))
     }
 }

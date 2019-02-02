@@ -26,8 +26,7 @@ class PostService(private val postRepository: PostRepository) {
     }
 
     fun changeDisplayed(id: Long) {
-        val post = postRepository.findById(id)
-                .orElseThrow { IllegalArgumentException("Post with the given id not found") }
+        val post = retrievePost(id)
 
         val updated = post.copy(displayed = !post.displayed)
 
@@ -37,4 +36,15 @@ class PostService(private val postRepository: PostRepository) {
     fun getDisplayedPosts(): List<Post> {
         return postRepository.getAllByDisplayedTrue()
     }
+
+    fun like(id: Long) {
+        val post = retrievePost(id)
+
+        val updated = post.copy(rating = post.rating.inc())
+
+        postRepository.save(updated)
+    }
+
+    private fun retrievePost(id: Long) = postRepository.findById(id)
+            .orElseThrow { IllegalArgumentException("Post with the given id not found") }
 }
