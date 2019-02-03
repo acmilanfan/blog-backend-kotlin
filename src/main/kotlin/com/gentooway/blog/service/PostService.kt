@@ -1,7 +1,10 @@
 package com.gentooway.blog.service
 
+import com.gentooway.blog.json.PageableRequest
 import com.gentooway.blog.model.Post
 import com.gentooway.blog.repository.PostRepository
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -33,8 +36,10 @@ class PostService(private val postRepository: PostRepository) {
         postRepository.save(updated)
     }
 
-    fun getDisplayedPosts(): List<Post> {
-        return postRepository.getAllByDisplayedTrue()
+    fun getDisplayedPosts(request: PageableRequest): List<Post> {
+        val pageRequest = PageRequest.of(request.page, request.size, Sort.by(request.direction, request.field))
+
+        return postRepository.getAllByDisplayedTrue(pageRequest).content
     }
 
     fun like(id: Long) {

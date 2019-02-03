@@ -2,6 +2,7 @@ package com.gentooway.blog.web
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import com.gentooway.blog.json.PageableRequest
 import com.gentooway.blog.model.Post
 import com.gentooway.blog.repository.PostRepository
 import org.hamcrest.CoreMatchers.equalTo
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.domain.Sort
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
@@ -219,8 +221,12 @@ class PostControllerTest {
                 displayed = false)
         postRepository.save(notDisplayedPost)
 
+        val pageableRequest = PageableRequest(page = 0, size = 1)
+
         // when
-        val mvcResult = mvc.perform(get("/post/displayed"))
+        val mvcResult = mvc.perform(post("/post/displayed")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(objectMapper.writeValueAsString(pageableRequest)))
                 .andExpect(status().isOk)
                 .andReturn()
 
@@ -277,5 +283,56 @@ class PostControllerTest {
 
         val savedPost = posts.get(0)
         assertThat(savedPost.rating, Is(equalTo(4)))
+    }
+
+    @Test
+    internal fun `should return a sorted page with posts`() {
+        // given
+        val post = Post(
+                content = "test123",
+                author = "1",
+                preview = "123",
+                tags = "tag1",
+                displayed = true)
+        postRepository.save(post)
+
+        val secondPost = Post(
+                content = "testewq",
+                author = "3",
+                preview = "321",
+                tags = "tagw",
+                displayed = true)
+        postRepository.save(secondPost)
+
+        val thirdPost = Post(
+                content = "test123",
+                author = "2",
+                preview = "123",
+                tags = "tag1",
+                displayed = true)
+        postRepository.save(thirdPost)
+
+        val pageableRequest = PageableRequest(
+                page = 0,
+                size = 2,
+                field = "author",
+                direction = Sort.Direction.ASC)
+
+        // when
+        val mvcResult = mvc.perform(post("/post/displayed")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(objectMapper.writeValueAsString(pageableRequest)))
+                .andExpect(status().isOk)
+                .andReturn()
+
+        // then
+        val posts = objectMapper.readValue<List<Post>>(mvcResult.response.contentAsString)
+        assertThat(posts.size, Is(equalTo(2)))
+
+        val foundPost = posts.get(0)
+        assertThat(foundPost.id, Is(equalTo(post.id)))
+
+        val foundSecondPost = posts.get(1)
+        assertThat(foundSecondPost.id, Is(equalTo(thirdPost.id)))
     }
 }

@@ -1,5 +1,6 @@
 package com.gentooway.blog.web
 
+import com.gentooway.blog.json.PageableRequest
 import com.gentooway.blog.model.Post
 import com.gentooway.blog.service.PostService
 import org.springframework.web.bind.annotation.*
@@ -38,9 +39,9 @@ class PostController(private val postService: PostService) {
         postService.changeDisplayed(id)
     }
 
-    @GetMapping("/displayed")
-    fun getDisplayedPosts(): List<Post> {
-        return postService.getDisplayedPosts()
+    @PostMapping("/displayed")
+    fun getDisplayedPosts(@RequestBody pageableRequest: PageableRequest): List<Post> {
+        return postService.getDisplayedPosts(pageableRequest)
     }
 
     @PutMapping("/{id}/like")

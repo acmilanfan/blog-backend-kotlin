@@ -9,8 +9,6 @@
 * Hibernate 5.3.7
 
 **TODOs:**
-* Implement sorting posts by date
-* Implement sorting posts by rating
 * Implement the comment entity
 * Add many to one relationship between comment and post
 * Implement adding a new comment
