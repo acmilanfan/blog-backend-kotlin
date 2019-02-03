@@ -1,3 +1,20 @@
 package com.gentooway.blog.model
 
-// todo
+import java.time.LocalDateTime
+import javax.persistence.*
+
+@Entity
+data class Comment(
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        val id: Long = 0,
+
+        val content: String,
+
+        val author: String,
+
+        val rating: Int = 0,
+
+        @Column(name = "CREATION_DATE")
+        val creationDate: LocalDateTime = LocalDateTime.now()
+)
