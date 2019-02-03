@@ -14,6 +14,11 @@ class PostController(private val postService: PostService) {
         return postService.getAllPosts()
     }
 
+    @GetMapping("/{id}/info")
+    fun getById(@PathVariable id: Long): Post {
+        return postService.getById(id)
+    }
+
     @PostMapping
     fun create(@RequestBody post: Post) {
         postService.createOrUpdatePost(post)

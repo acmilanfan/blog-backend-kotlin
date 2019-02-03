@@ -335,4 +335,33 @@ class PostControllerTest {
         val foundSecondPost = posts.get(1)
         assertThat(foundSecondPost.id, Is(equalTo(thirdPost.id)))
     }
+
+    @Test
+    internal fun `should return full post information`() {
+        // given
+        val post = Post(
+                content = "test123",
+                author = "1",
+                preview = "123",
+                tags = "tag1",
+                displayed = true)
+        postRepository.save(post)
+
+        // when
+        val mvcResult = mvc.perform(get("/post/${post.id}/info"))
+                .andExpect(status().isOk)
+                .andReturn()
+
+        // then
+        val receivedPost = objectMapper.readValue<Post>(mvcResult.response.contentAsString)
+
+        assertThat(receivedPost.id, Is(equalTo(post.id)))
+        assertThat(receivedPost.rating, Is(equalTo(post.rating)))
+        assertThat(receivedPost.displayed, Is(equalTo(post.displayed)))
+        assertThat(receivedPost.creationDate, Is(equalTo(post.creationDate)))
+        assertThat(receivedPost.tags, Is(equalTo(post.tags)))
+        assertThat(receivedPost.preview, Is(equalTo(post.preview)))
+        assertThat(receivedPost.author, Is(equalTo(post.author)))
+        assertThat(receivedPost.content, Is(equalTo(post.content)))
+    }
 }

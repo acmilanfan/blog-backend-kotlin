@@ -9,7 +9,6 @@
 * Hibernate 5.3.7
 
 **TODOs:**
-* Implement the comment entity
 * Add many to one relationship between comment and post
 * Implement adding a new comment
 * Implement deleting a comment

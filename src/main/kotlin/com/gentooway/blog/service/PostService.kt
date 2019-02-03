@@ -16,6 +16,10 @@ class PostService(private val postRepository: PostRepository) {
         return postRepository.findAll()
     }
 
+    fun getById(id: Long): Post {
+        return retrievePost(id)
+    }
+
     fun createOrUpdatePost(post: Post) {
         postRepository.save(post)
     }
