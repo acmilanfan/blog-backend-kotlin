@@ -1,5 +1,6 @@
 package com.gentooway.blog.model
 
+import java.io.Serializable
 import java.time.LocalDateTime
 import javax.persistence.*
 
@@ -16,5 +17,9 @@ data class Comment(
         val rating: Int = 0,
 
         @Column(name = "CREATION_DATE")
-        val creationDate: LocalDateTime = LocalDateTime.now()
-)
+        val creationDate: LocalDateTime = LocalDateTime.now(),
+
+        @ManyToOne
+        @JoinColumn(name = "POST_ID")
+        val post: Post
+) : Serializable

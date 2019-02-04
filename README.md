@@ -9,7 +9,6 @@
 * Hibernate 5.3.7
 
 **TODOs:**
-* Add many to one relationship between comment and post
 * Implement adding a new comment
 * Implement deleting a comment
 * Implement hiding/showing a comment (by default hidden)

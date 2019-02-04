@@ -23,5 +23,8 @@ data class Post(
         @Column(name = "CREATION_DATE")
         val creationDate: LocalDateTime = LocalDateTime.now(),
 
-        val displayed: Boolean = false
+        val displayed: Boolean = false,
+
+        @OneToMany(mappedBy = "post", cascade = [CascadeType.ALL], fetch = FetchType.LAZY, orphanRemoval = true)
+        val comments: List<Comment> = emptyList()
 ) : Serializable
