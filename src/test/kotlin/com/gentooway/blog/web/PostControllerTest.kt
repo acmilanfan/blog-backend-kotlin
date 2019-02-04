@@ -1,6 +1,5 @@
 package com.gentooway.blog.web
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.gentooway.blog.json.PageableRequest
 import com.gentooway.blog.model.Post
@@ -9,35 +8,19 @@ import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.notNullValue
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.Is
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.Sort
 import org.springframework.http.MediaType
-import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDate
 
-@SpringBootTest
-@AutoConfigureMockMvc
-class PostControllerTest {
 
-    @Autowired
-    private lateinit var mvc: MockMvc
+internal class PostControllerTest : WebControllerTest() {
 
     @Autowired
     private lateinit var postRepository: PostRepository
-
-    @Autowired
-    private lateinit var objectMapper: ObjectMapper
-
-    @BeforeEach
-    internal fun setUp() {
-        postRepository.deleteAll()
-    }
 
     @Test
     internal fun `should return all posts`() {

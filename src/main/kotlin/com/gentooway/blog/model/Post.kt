@@ -26,5 +26,5 @@ data class Post(
         val displayed: Boolean = false,
 
         @OneToMany(mappedBy = "post", cascade = [CascadeType.ALL], fetch = FetchType.LAZY, orphanRemoval = true)
-        val comments: List<Comment> = emptyList()
+        val comments: MutableList<Comment> = mutableListOf()
 ) : Serializable
