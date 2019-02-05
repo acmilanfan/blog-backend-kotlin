@@ -9,14 +9,10 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.Is
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 
-@SpringBootTest
-@AutoConfigureMockMvc
 internal class CommentControllerTest : WebControllerTest() {
 
     @Autowired
@@ -52,5 +48,33 @@ internal class CommentControllerTest : WebControllerTest() {
 
         val commentsCount = commentRepository.count()
         assertThat(commentsCount, Is(equalTo(1L)))
+    }
+
+    @Test
+    internal fun `should delete comment`() {
+        // given
+        val post = Post(
+                content = "test123",
+                author = "test",
+                preview = "123",
+                tags = "tag1")
+        postRepository.save(post)
+
+        val comment = Comment(
+                content = "test comment",
+                author = "test132",
+                post = post)
+        commentRepository.save(comment)
+
+        // when
+        mvc.perform(MockMvcRequestBuilders.delete("/comment/${comment.id}"))
+                .andExpect(MockMvcResultMatchers.status().isOk)
+
+        // then
+        val postFromDb = postRepository.findById(post.id).orElse(post)
+        assertThat(postFromDb.comments.size, Is(equalTo(0)))
+
+        val commentsCount = commentRepository.count()
+        assertThat(commentsCount, Is(equalTo(0L)))
     }
 }

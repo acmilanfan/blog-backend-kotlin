@@ -18,4 +18,8 @@ class CommentService(private val commentRepository: CommentRepository,
         post.comments.add(comment)
     }
 
+    fun delete(commentId: Long) {
+        commentRepository.deleteById(commentId)
+    }
+
 }
