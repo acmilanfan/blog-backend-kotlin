@@ -1,5 +1,6 @@
 package com.gentooway.blog.service
 
+import com.gentooway.blog.errors.ExceptionDescription.Companion.POST_NOT_FOUND
 import com.gentooway.blog.json.PageableRequest
 import com.gentooway.blog.model.Post
 import com.gentooway.blog.repository.PostRepository
@@ -64,5 +65,5 @@ class PostService(private val postRepository: PostRepository) {
     }
 
     private fun retrievePost(id: Long) = postRepository.findById(id)
-            .orElseThrow { IllegalArgumentException("Post with the given id not found") }
+            .orElseThrow { IllegalArgumentException(POST_NOT_FOUND) }
 }

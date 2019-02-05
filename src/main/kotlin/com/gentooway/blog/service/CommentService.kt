@@ -1,5 +1,7 @@
 package com.gentooway.blog.service
 
+import com.gentooway.blog.errors.ExceptionDescription
+import com.gentooway.blog.errors.ExceptionDescription.Companion.COMMENT_NOT_FOUND
 import com.gentooway.blog.model.Comment
 import com.gentooway.blog.repository.CommentRepository
 import com.gentooway.blog.repository.PostRepository
@@ -13,7 +15,7 @@ class CommentService(private val commentRepository: CommentRepository,
 
     fun create(postId: Long, comment: Comment) {
         val post = postRepository.findById(postId)
-                .orElseThrow { IllegalArgumentException("Post with the given id not found") }
+                .orElseThrow { IllegalArgumentException(ExceptionDescription.POST_NOT_FOUND) }
 
         post.comments.add(comment)
     }
@@ -24,7 +26,7 @@ class CommentService(private val commentRepository: CommentRepository,
 
     fun changeDisplayed(commentId: Long) {
         val comment = commentRepository.findById(commentId)
-                .orElseThrow { IllegalArgumentException("Comment with the given id not found") }
+                .orElseThrow { IllegalArgumentException(COMMENT_NOT_FOUND) }
 
         val updated = comment.copy(displayed = !comment.displayed)
 
