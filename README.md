@@ -9,7 +9,7 @@
 * Hibernate 5.3.7
 
 **TODOs:**
-* Implement hiding/showing a comment (by default hidden)
+* Implement getting only displayed comments for a post
 * Implement sorting posts by comments number (most popular)
 * Implement liking a comment
 * Implement disliking a comment

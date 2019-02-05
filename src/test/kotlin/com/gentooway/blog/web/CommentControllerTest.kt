@@ -77,4 +77,33 @@ internal class CommentControllerTest : WebControllerTest() {
         val commentsCount = commentRepository.count()
         assertThat(commentsCount, Is(equalTo(0L)))
     }
+
+    @Test
+    internal fun `should switch comment displayed value`() {
+        // given
+        val post = Post(
+                content = "test123",
+                author = "test",
+                preview = "123",
+                tags = "tag1")
+        postRepository.save(post)
+
+        val comment = Comment(
+                content = "test comment",
+                author = "test132",
+                post = post,
+                displayed = true)
+        commentRepository.save(comment)
+
+        // when
+        mvc.perform(MockMvcRequestBuilders.put("/comment/${comment.id}/displayed"))
+                .andExpect(MockMvcResultMatchers.status().isOk)
+
+        // then
+        val comments = commentRepository.findAll()
+        assertThat(comments.size, Is(equalTo(1)))
+
+        val savedComment = comments.get(0)
+        assertThat(savedComment.displayed, Is(equalTo(false)))
+    }
 }

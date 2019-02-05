@@ -22,4 +22,13 @@ class CommentService(private val commentRepository: CommentRepository,
         commentRepository.deleteById(commentId)
     }
 
+    fun changeDisplayed(commentId: Long) {
+        val comment = commentRepository.findById(commentId)
+                .orElseThrow { IllegalArgumentException("Comment with the given id not found") }
+
+        val updated = comment.copy(displayed = !comment.displayed)
+
+        commentRepository.save(updated)
+    }
+
 }

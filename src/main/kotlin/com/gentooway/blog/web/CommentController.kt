@@ -16,4 +16,9 @@ class CommentController(private val commentService: CommentService) {
     fun delete(@PathVariable commentId: Long) {
         commentService.delete(commentId)
     }
+
+    @PutMapping("/comment/{commentId}/displayed")
+    fun changeDisplayed(@PathVariable commentId: Long) {
+        commentService.changeDisplayed(commentId)
+    }
 }

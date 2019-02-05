@@ -19,6 +19,8 @@ data class Comment(
         @Column(name = "CREATION_DATE")
         val creationDate: LocalDateTime = LocalDateTime.now(),
 
+        val displayed: Boolean = false,
+
         @ManyToOne
         @JoinColumn(name = "POST_ID")
         val post: Post

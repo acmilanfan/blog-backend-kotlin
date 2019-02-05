@@ -10,8 +10,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.*
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.never
-import org.mockito.Mockito.verify
+import org.mockito.Mockito.*
 import java.util.*
 
 internal class PostServiceTest {
@@ -72,7 +71,7 @@ internal class PostServiceTest {
                 tags = "tag1",
                 displayed = true)
 
-        Mockito.`when`(postRepository.findById(any())).thenReturn(Optional.ofNullable(post))
+        `when`(postRepository.findById(any())).thenReturn(Optional.ofNullable(post))
 
         // when
         postService.changeDisplayed(123L)
