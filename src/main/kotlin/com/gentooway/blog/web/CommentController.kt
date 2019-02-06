@@ -1,5 +1,6 @@
 package com.gentooway.blog.web
 
+import com.gentooway.blog.json.PageableRequest
 import com.gentooway.blog.model.Comment
 import com.gentooway.blog.service.CommentService
 import org.springframework.web.bind.annotation.*
@@ -22,8 +23,8 @@ class CommentController(private val commentService: CommentService) {
         commentService.changeDisplayed(commentId)
     }
 
-    @GetMapping("/post/{postId}/comment/displayed")
-    fun getDisplayed(@PathVariable postId: Long): List<Comment> {
-        return commentService.getDisplayed(postId)
+    @PostMapping("/post/{postId}/comment/displayed")
+    fun getDisplayed(@PathVariable postId: Long, @RequestBody pageableRequest: PageableRequest): List<Comment> {
+        return commentService.getDisplayed(postId, pageableRequest)
     }
 }

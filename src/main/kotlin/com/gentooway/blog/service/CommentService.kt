@@ -2,9 +2,12 @@ package com.gentooway.blog.service
 
 import com.gentooway.blog.errors.ExceptionDescription
 import com.gentooway.blog.errors.ExceptionDescription.Companion.COMMENT_NOT_FOUND
+import com.gentooway.blog.json.PageableRequest
 import com.gentooway.blog.model.Comment
 import com.gentooway.blog.repository.CommentRepository
 import com.gentooway.blog.repository.PostRepository
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -33,8 +36,10 @@ class CommentService(private val commentRepository: CommentRepository,
         commentRepository.save(updated)
     }
 
-    fun getDisplayed(postId: Long): List<Comment> {
-        return commentRepository.getAllByPostIdAndDisplayedTrue(postId)
+    fun getDisplayed(postId: Long, request: PageableRequest): List<Comment> {
+        val pageRequest = PageRequest.of(request.page, request.size, Sort.by(request.direction, request.field))
+
+        return commentRepository.getAllByPostIdAndDisplayedTrue(postId, pageRequest).content
     }
 
 }

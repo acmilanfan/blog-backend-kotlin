@@ -1,6 +1,7 @@
 package com.gentooway.blog.web
 
 import com.fasterxml.jackson.module.kotlin.readValue
+import com.gentooway.blog.json.PageableRequest
 import com.gentooway.blog.model.Comment
 import com.gentooway.blog.model.Post
 import com.gentooway.blog.repository.CommentRepository
@@ -10,6 +11,7 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.Is
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Sort
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
@@ -132,8 +134,14 @@ internal class CommentControllerTest : WebControllerTest() {
                 displayed = false)
         commentRepository.save(norDisplayedComment)
 
+        val pageableRequest = PageableRequest(
+                page = 0,
+                size = 2)
+
         // when
-        val mvcResult = mvc.perform(get("/post/${post.id}/comment/displayed"))
+        val mvcResult = mvc.perform(post("/post/${post.id}/comment/displayed")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(objectMapper.writeValueAsString(pageableRequest)))
                 .andExpect(MockMvcResultMatchers.status().isOk)
                 .andReturn()
 
@@ -144,5 +152,61 @@ internal class CommentControllerTest : WebControllerTest() {
         val foundComment = comments.get(0)
         assertThat(foundComment.id, Is(equalTo(comment.id)))
         assertThat(foundComment.displayed, Is(equalTo(true)))
+    }
+
+    @Test
+    internal fun `should return a sorted page with comments`() {
+        // given
+        val post = Post(
+                content = "test123",
+                author = "test",
+                preview = "123",
+                tags = "tag1")
+        postRepository.save(post)
+
+        val comment = Comment(
+                content = "test comment",
+                author = "3",
+                post = post,
+                displayed = true)
+        commentRepository.save(comment)
+
+        val secondComment = Comment(
+                content = "test comment 2",
+                author = "2",
+                post = post,
+                displayed = true)
+        commentRepository.save(secondComment)
+
+        val thirdComment = Comment(
+                content = "test comment 3",
+                author = "1",
+                post = post,
+                displayed = false)
+        commentRepository.save(thirdComment)
+
+
+        val pageableRequest = PageableRequest(
+                page = 0,
+                size = 2,
+                field = "author",
+                direction = Sort.Direction.ASC)
+
+        // when
+        val mvcResult = mvc.perform(post("/post/${post.id}/comment/displayed")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(objectMapper.writeValueAsString(pageableRequest)))
+                .andExpect(MockMvcResultMatchers.status().isOk)
+                .andReturn()
+
+        // then
+        val comments = objectMapper.readValue<List<Comment>>(mvcResult.response.contentAsString)
+        assertThat(comments.size, Is(equalTo(2)))
+
+        val foundComment = comments.get(0)
+        assertThat(foundComment.id, Is(equalTo(secondComment.id)))
+
+        val foundSecondComment = comments.get(1)
+        assertThat(foundSecondComment.id, Is(equalTo(comment.id)))
     }
 }
