@@ -1,5 +1,6 @@
 package com.gentooway.blog.web
 
+import com.fasterxml.jackson.module.kotlin.readValue
 import com.gentooway.blog.model.Comment
 import com.gentooway.blog.model.Post
 import com.gentooway.blog.repository.CommentRepository
@@ -10,7 +11,7 @@ import org.hamcrest.core.Is
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 
 internal class CommentControllerTest : WebControllerTest() {
@@ -37,7 +38,7 @@ internal class CommentControllerTest : WebControllerTest() {
                 post = post)
 
         // when
-        mvc.perform(MockMvcRequestBuilders.post("/post/${post.id}/comment")
+        mvc.perform(post("/post/${post.id}/comment")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(comment)))
                 .andExpect(MockMvcResultMatchers.status().isOk)
@@ -67,7 +68,7 @@ internal class CommentControllerTest : WebControllerTest() {
         commentRepository.save(comment)
 
         // when
-        mvc.perform(MockMvcRequestBuilders.delete("/comment/${comment.id}"))
+        mvc.perform(delete("/comment/${comment.id}"))
                 .andExpect(MockMvcResultMatchers.status().isOk)
 
         // then
@@ -96,7 +97,7 @@ internal class CommentControllerTest : WebControllerTest() {
         commentRepository.save(comment)
 
         // when
-        mvc.perform(MockMvcRequestBuilders.put("/comment/${comment.id}/displayed"))
+        mvc.perform(put("/comment/${comment.id}/displayed"))
                 .andExpect(MockMvcResultMatchers.status().isOk)
 
         // then
@@ -105,5 +106,43 @@ internal class CommentControllerTest : WebControllerTest() {
 
         val savedComment = comments.get(0)
         assertThat(savedComment.displayed, Is(equalTo(false)))
+    }
+
+    @Test
+    internal fun `should return only displayed comments by post id`() {
+        // given
+        val post = Post(
+                content = "test123",
+                author = "test",
+                preview = "123",
+                tags = "tag1")
+        postRepository.save(post)
+
+        val comment = Comment(
+                content = "test comment",
+                author = "test132",
+                post = post,
+                displayed = true)
+        commentRepository.save(comment)
+
+        val norDisplayedComment = Comment(
+                content = "test comment 2",
+                author = "test321",
+                post = post,
+                displayed = false)
+        commentRepository.save(norDisplayedComment)
+
+        // when
+        val mvcResult = mvc.perform(get("/post/${post.id}/comment/displayed"))
+                .andExpect(MockMvcResultMatchers.status().isOk)
+                .andReturn()
+
+        // then
+        val comments = objectMapper.readValue<List<Comment>>(mvcResult.response.contentAsString)
+        assertThat(comments.size, Is(equalTo(1)))
+
+        val foundComment = comments.get(0)
+        assertThat(foundComment.id, Is(equalTo(comment.id)))
+        assertThat(foundComment.displayed, Is(equalTo(true)))
     }
 }

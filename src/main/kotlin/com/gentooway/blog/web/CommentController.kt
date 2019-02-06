@@ -21,4 +21,9 @@ class CommentController(private val commentService: CommentService) {
     fun changeDisplayed(@PathVariable commentId: Long) {
         commentService.changeDisplayed(commentId)
     }
+
+    @GetMapping("/post/{postId}/comment/displayed")
+    fun getDisplayed(@PathVariable postId: Long): List<Comment> {
+        return commentService.getDisplayed(postId)
+    }
 }

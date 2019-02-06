@@ -33,4 +33,8 @@ class CommentService(private val commentRepository: CommentRepository,
         commentRepository.save(updated)
     }
 
+    fun getDisplayed(postId: Long): List<Comment> {
+        return commentRepository.getAllByPostIdAndDisplayedTrue(postId)
+    }
+
 }
