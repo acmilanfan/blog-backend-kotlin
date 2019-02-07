@@ -2,7 +2,9 @@ package com.gentooway.blog.web
 
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.gentooway.blog.json.PageableRequest
+import com.gentooway.blog.model.Comment
 import com.gentooway.blog.model.Post
+import com.gentooway.blog.repository.CommentRepository
 import com.gentooway.blog.repository.PostRepository
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.notNullValue
@@ -21,6 +23,9 @@ internal class PostControllerTest : WebControllerTest() {
 
     @Autowired
     private lateinit var postRepository: PostRepository
+
+    @Autowired
+    private lateinit var commentRepository: CommentRepository
 
     @Test
     internal fun `should return all posts`() {
@@ -346,5 +351,67 @@ internal class PostControllerTest : WebControllerTest() {
         assertThat(receivedPost.preview, Is(equalTo(post.preview)))
         assertThat(receivedPost.author, Is(equalTo(post.author)))
         assertThat(receivedPost.content, Is(equalTo(post.content)))
+    }
+
+    @Test
+    internal fun `should return posts sorted by popularity`() {
+        // given
+        val post = Post(
+                content = "test123",
+                author = "1",
+                preview = "123",
+                tags = "tag1",
+                displayed = true)
+        postRepository.save(post)
+
+        val comment = Comment(
+                content = "test comment",
+                author = "test",
+                post = post,
+                displayed = true)
+        commentRepository.save(comment)
+
+        val secondComment = Comment(
+                content = "test comment2",
+                author = "test",
+                post = post,
+                displayed = true)
+        commentRepository.save(secondComment)
+
+        val secondPost = Post(
+                content = "testewq",
+                author = "3",
+                preview = "321",
+                tags = "tagw",
+                displayed = true)
+        postRepository.save(secondPost)
+
+        val thirdComment = Comment(
+                content = "test comment3",
+                author = "test",
+                post = secondPost,
+                displayed = true)
+        commentRepository.save(thirdComment)
+
+        val pageableRequest = PageableRequest(
+                page = 0,
+                size = 2)
+
+        // when
+        val mvcResult = mvc.perform(post("/post/popular")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(objectMapper.writeValueAsString(pageableRequest)))
+                .andExpect(status().isOk)
+                .andReturn()
+
+        // then
+        val posts = objectMapper.readValue<List<Post>>(mvcResult.response.contentAsString)
+        assertThat(posts.size, Is(equalTo(2)))
+
+        val foundPost = posts.get(0)
+        assertThat(foundPost.id, Is(equalTo(post.id)))
+
+        val secondFoundPost = posts.get(1)
+        assertThat(secondFoundPost.id, Is(equalTo(secondPost.id)))
     }
 }

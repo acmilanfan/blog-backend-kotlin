@@ -58,4 +58,9 @@ class PostController(private val postService: PostService) {
     fun dislike(@PathVariable id: Long) {
         postService.dislike(id)
     }
+
+    @PostMapping("/popular")
+    fun getMostPopular(@RequestBody pageableRequest: PageableRequest): List<Post> {
+        return postService.getMostPopular(pageableRequest)
+    }
 }

@@ -64,6 +64,13 @@ class PostService(private val postRepository: PostRepository) {
         }
     }
 
-    private fun retrievePost(id: Long) = postRepository.findById(id)
-            .orElseThrow { IllegalArgumentException(POST_NOT_FOUND) }
+    fun getMostPopular(request: PageableRequest): List<Post> {
+        val pageRequest = PageRequest.of(request.page, request.size)
+
+        return postRepository.getAllByOrderByComments(pageRequest).content
+    }
+
+    private fun retrievePost(id: Long) =
+            postRepository.findById(id)
+                    .orElseThrow { IllegalArgumentException(POST_NOT_FOUND) }
 }
