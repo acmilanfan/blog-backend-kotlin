@@ -28,8 +28,7 @@ class CommentService(private val commentRepository: CommentRepository,
     }
 
     fun changeDisplayed(commentId: Long) {
-        val comment = commentRepository.findById(commentId)
-                .orElseThrow { IllegalArgumentException(COMMENT_NOT_FOUND) }
+        val comment = retrieveComment(commentId)
 
         val updated = comment.copy(displayed = !comment.displayed)
 
@@ -41,5 +40,17 @@ class CommentService(private val commentRepository: CommentRepository,
 
         return commentRepository.getAllByPostIdAndDisplayedTrue(postId, pageRequest).content
     }
+
+    fun like(commentId: Long) {
+        val comment = retrieveComment(commentId)
+
+        val updated = comment.copy(rating = comment.rating.inc())
+
+        commentRepository.save(updated)
+    }
+
+    private fun retrieveComment(commentId: Long) =
+            commentRepository.findById(commentId)
+                    .orElseThrow { IllegalArgumentException(COMMENT_NOT_FOUND) }
 
 }

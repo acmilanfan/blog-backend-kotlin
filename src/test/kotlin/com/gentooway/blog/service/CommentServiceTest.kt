@@ -93,4 +93,32 @@ internal class CommentServiceTest {
 
         assertThat(captor.value.displayed, Is(equalTo(false)))
     }
+
+    @Test
+    internal fun `should increment comment rating`() {
+        // given
+        val post = Post(content = "test123",
+                author = "test",
+                preview = "123",
+                tags = "tag1")
+
+        val comment = Comment(
+                content = "test comment",
+                author = "test132",
+                post = post,
+                displayed = true,
+                rating = 10)
+
+        `when`(commentRepository.findById(ArgumentMatchers.any())).thenReturn(Optional.ofNullable(comment))
+
+        // when
+        commentService.like(123L)
+
+        // then
+        val captor: ArgumentCaptor<Comment> = ArgumentCaptor.forClass(Comment::class.java)
+
+        verify(commentRepository).save(captor.capture())
+
+        assertThat(captor.value.rating, Is(equalTo(11)))
+    }
 }

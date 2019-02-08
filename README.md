@@ -9,7 +9,6 @@
 * Hibernate 5.3.7
 
 **TODOs:**
-* Implement liking a comment
 * Implement disliking a comment
 * Implement sorting comments by rating
 * Write documentation (javaDocs)

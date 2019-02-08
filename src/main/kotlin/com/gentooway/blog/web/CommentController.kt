@@ -27,4 +27,9 @@ class CommentController(private val commentService: CommentService) {
     fun getDisplayed(@PathVariable postId: Long, @RequestBody pageableRequest: PageableRequest): List<Comment> {
         return commentService.getDisplayed(postId, pageableRequest)
     }
+
+    @PutMapping("/comment/{commentId}/like")
+    fun like(@PathVariable commentId: Long) {
+        commentService.like(commentId)
+    }
 }

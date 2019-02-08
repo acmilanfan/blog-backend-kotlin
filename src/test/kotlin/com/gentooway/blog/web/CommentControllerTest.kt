@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Sort
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 internal class CommentControllerTest : WebControllerTest() {
 
@@ -43,7 +43,7 @@ internal class CommentControllerTest : WebControllerTest() {
         mvc.perform(post("/post/${post.id}/comment")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(comment)))
-                .andExpect(MockMvcResultMatchers.status().isOk)
+                .andExpect(status().isOk)
 
         // then
         val postFromDb = postRepository.findById(post.id).orElse(post)
@@ -71,7 +71,7 @@ internal class CommentControllerTest : WebControllerTest() {
 
         // when
         mvc.perform(delete("/comment/${comment.id}"))
-                .andExpect(MockMvcResultMatchers.status().isOk)
+                .andExpect(status().isOk)
 
         // then
         val postFromDb = postRepository.findById(post.id).orElse(post)
@@ -100,7 +100,7 @@ internal class CommentControllerTest : WebControllerTest() {
 
         // when
         mvc.perform(put("/comment/${comment.id}/displayed"))
-                .andExpect(MockMvcResultMatchers.status().isOk)
+                .andExpect(status().isOk)
 
         // then
         val comments = commentRepository.findAll()
@@ -142,7 +142,7 @@ internal class CommentControllerTest : WebControllerTest() {
         val mvcResult = mvc.perform(post("/post/${post.id}/comment/displayed")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(pageableRequest)))
-                .andExpect(MockMvcResultMatchers.status().isOk)
+                .andExpect(status().isOk)
                 .andReturn()
 
         // then
@@ -196,7 +196,7 @@ internal class CommentControllerTest : WebControllerTest() {
         val mvcResult = mvc.perform(post("/post/${post.id}/comment/displayed")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(pageableRequest)))
-                .andExpect(MockMvcResultMatchers.status().isOk)
+                .andExpect(status().isOk)
                 .andReturn()
 
         // then
@@ -208,5 +208,35 @@ internal class CommentControllerTest : WebControllerTest() {
 
         val foundSecondComment = comments.get(1)
         assertThat(foundSecondComment.id, Is(equalTo(comment.id)))
+    }
+
+    @Test
+    internal fun `should like a comment`() {
+        // given
+        val post = Post(
+                content = "test123",
+                author = "test",
+                preview = "123",
+                tags = "tag1")
+        postRepository.save(post)
+
+        val comment = Comment(
+                content = "test comment",
+                author = "123",
+                post = post,
+                displayed = true,
+                rating = 1)
+        commentRepository.save(comment)
+
+        // when
+        mvc.perform(put("/comment/${comment.id}/like"))
+                .andExpect(status().isOk)
+
+        // then
+        val comments = commentRepository.findAll()
+        assertThat(comments.size, Is(equalTo(1)))
+
+        val savedComment = comments.get(0)
+        assertThat(savedComment.rating, Is(equalTo(2)))
     }
 }
