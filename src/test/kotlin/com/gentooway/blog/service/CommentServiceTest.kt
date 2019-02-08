@@ -11,8 +11,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.*
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.verify
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.*
 import java.util.*
 
 internal class CommentServiceTest {
@@ -121,4 +121,56 @@ internal class CommentServiceTest {
 
         assertThat(captor.value.rating, Is(equalTo(11)))
     }
+
+    @Test
+    internal fun `should decrement comment rating`() {
+        // given
+        val post = Post(content = "test123",
+                author = "test",
+                preview = "123",
+                tags = "tag1")
+
+        val comment = Comment(
+                content = "test comment",
+                author = "test132",
+                post = post,
+                displayed = true,
+                rating = 10)
+
+        `when`(commentRepository.findById(any())).thenReturn(Optional.ofNullable(comment))
+
+        // when
+        commentService.dislike(123L)
+
+        // then
+        val captor: ArgumentCaptor<Comment> = ArgumentCaptor.forClass(Comment::class.java)
+
+        verify(commentRepository).save(captor.capture())
+
+        assertThat(captor.value.rating, Is(equalTo(9)))
+    }
+
+    @Test
+    internal fun `should not decrement if the comment rating is zero`() {
+        // given
+        val post = Post(content = "test123",
+                author = "test",
+                preview = "123",
+                tags = "tag1")
+
+        val comment = Comment(
+                content = "test comment",
+                author = "test132",
+                post = post,
+                displayed = true)
+
+        `when`(commentRepository.findById(any())).thenReturn(Optional.ofNullable(comment))
+
+        // when
+        commentService.dislike(123L)
+
+        // then
+        verify(commentRepository, never()).save(any())
+    }
+
 }

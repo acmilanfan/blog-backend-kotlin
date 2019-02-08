@@ -49,6 +49,15 @@ class CommentService(private val commentRepository: CommentRepository,
         commentRepository.save(updated)
     }
 
+    fun dislike(commentId: Long) {
+        val comment = retrieveComment(commentId)
+
+        if (comment.rating > 0) {
+            val updated = comment.copy(rating = comment.rating.dec())
+            commentRepository.save(updated)
+        }
+    }
+
     private fun retrieveComment(commentId: Long) =
             commentRepository.findById(commentId)
                     .orElseThrow { IllegalArgumentException(COMMENT_NOT_FOUND) }

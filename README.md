@@ -9,8 +9,6 @@
 * Hibernate 5.3.7
 
 **TODOs:**
-* Implement disliking a comment
-* Implement sorting comments by rating
 * Write documentation (javaDocs)
 * Test PostRepository.getAllByOrderByComments() method
 * Wrap every exception in json with 5xx or 4xx responses codes (ControllerAdvice)

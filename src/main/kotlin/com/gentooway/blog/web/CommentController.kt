@@ -32,4 +32,9 @@ class CommentController(private val commentService: CommentService) {
     fun like(@PathVariable commentId: Long) {
         commentService.like(commentId)
     }
+
+    @PutMapping("/comment/{commentId}/dislike")
+    fun dislike(@PathVariable commentId: Long) {
+        commentService.dislike(commentId)
+    }
 }

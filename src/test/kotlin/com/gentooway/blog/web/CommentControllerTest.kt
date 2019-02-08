@@ -239,4 +239,34 @@ internal class CommentControllerTest : WebControllerTest() {
         val savedComment = comments.get(0)
         assertThat(savedComment.rating, Is(equalTo(2)))
     }
+
+    @Test
+    internal fun `should dislike a comment`() {
+        // given
+        val post = Post(
+                content = "test123",
+                author = "test",
+                preview = "123",
+                tags = "tag1")
+        postRepository.save(post)
+
+        val comment = Comment(
+                content = "test comment",
+                author = "123",
+                post = post,
+                displayed = true,
+                rating = 5)
+        commentRepository.save(comment)
+
+        // when
+        mvc.perform(put("/comment/${comment.id}/dislike"))
+                .andExpect(status().isOk)
+
+        // then
+        val comments = commentRepository.findAll()
+        assertThat(comments.size, Is(equalTo(1)))
+
+        val savedComment = comments.get(0)
+        assertThat(savedComment.rating, Is(equalTo(4)))
+    }
 }
