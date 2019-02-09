@@ -9,6 +9,9 @@ import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
+/**
+ * Service for the posts entities logic
+ */
 @Service
 @Transactional
 class PostService(private val postRepository: PostRepository) {

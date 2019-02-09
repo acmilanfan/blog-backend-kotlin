@@ -5,6 +5,9 @@ import com.gentooway.blog.model.Comment
 import com.gentooway.blog.service.CommentService
 import org.springframework.web.bind.annotation.*
 
+/**
+ * Comments controller
+ */
 @RestController
 class CommentController(private val commentService: CommentService) {
 

@@ -4,6 +4,9 @@ import java.io.Serializable
 import java.time.LocalDateTime
 import javax.persistence.*
 
+/**
+ * Comment entity
+ */
 @Entity
 data class Comment(
         @Id

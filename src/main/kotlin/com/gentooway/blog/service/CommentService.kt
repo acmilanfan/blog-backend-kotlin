@@ -11,6 +11,9 @@ import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
+/**
+ * Service for the comments entities logic
+ */
 @Service
 @Transactional
 class CommentService(private val commentRepository: CommentRepository,
