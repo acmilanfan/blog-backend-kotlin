@@ -1,12 +1,15 @@
 package com.gentooway.blog.web
 
 import com.fasterxml.jackson.module.kotlin.readValue
+import com.gentooway.blog.errors.CommentNotFoundException
+import com.gentooway.blog.errors.ExceptionDescription.Companion.COMMENT_NOT_FOUND
 import com.gentooway.blog.json.PageableRequest
 import com.gentooway.blog.model.Comment
 import com.gentooway.blog.model.Post
 import com.gentooway.blog.repository.CommentRepository
 import com.gentooway.blog.repository.PostRepository
 import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.CoreMatchers.instanceOf
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.Is
 import org.junit.jupiter.api.Test
@@ -268,5 +271,20 @@ internal class CommentControllerTest : WebControllerTest() {
 
         val savedComment = comments.get(0)
         assertThat(savedComment.rating, Is(equalTo(4)))
+    }
+
+    @Test
+    internal fun `should receive an error message when comment not found`() {
+        // when
+        val mvcResult = mvc.perform(put("/comment/123/like"))
+                .andExpect(status().isBadRequest)
+                .andReturn()
+
+        // then
+        val resolvedException = mvcResult.resolvedException
+        assertThat(resolvedException, Is(instanceOf(CommentNotFoundException::class.java)))
+
+        val message = resolvedException?.message
+        assertThat(message, Is(equalTo(COMMENT_NOT_FOUND)))
     }
 }

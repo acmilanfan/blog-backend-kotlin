@@ -9,5 +9,4 @@
 * Hibernate 5.3.7
 
 **TODOs:**
-* Wrap every exception in json with 5xx or 4xx responses codes (ControllerAdvice)
 * ??? to be continued

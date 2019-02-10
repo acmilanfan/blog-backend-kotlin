@@ -1,7 +1,9 @@
 package com.gentooway.blog.service
 
+import com.gentooway.blog.errors.CommentNotFoundException
 import com.gentooway.blog.errors.ExceptionDescription
 import com.gentooway.blog.errors.ExceptionDescription.Companion.COMMENT_NOT_FOUND
+import com.gentooway.blog.errors.PostNotFoundException
 import com.gentooway.blog.json.PageableRequest
 import com.gentooway.blog.model.Comment
 import com.gentooway.blog.repository.CommentRepository
@@ -21,7 +23,7 @@ class CommentService(private val commentRepository: CommentRepository,
 
     fun create(postId: Long, comment: Comment) {
         val post = postRepository.findById(postId)
-                .orElseThrow { IllegalArgumentException(ExceptionDescription.POST_NOT_FOUND) }
+                .orElseThrow { PostNotFoundException(ExceptionDescription.POST_NOT_FOUND) }
 
         post.comments.add(comment)
     }
@@ -63,6 +65,6 @@ class CommentService(private val commentRepository: CommentRepository,
 
     private fun retrieveComment(commentId: Long) =
             commentRepository.findById(commentId)
-                    .orElseThrow { IllegalArgumentException(COMMENT_NOT_FOUND) }
+                    .orElseThrow { CommentNotFoundException(COMMENT_NOT_FOUND) }
 
 }

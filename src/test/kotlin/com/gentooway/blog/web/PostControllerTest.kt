@@ -1,13 +1,14 @@
 package com.gentooway.blog.web
 
 import com.fasterxml.jackson.module.kotlin.readValue
+import com.gentooway.blog.errors.ExceptionDescription.Companion.POST_NOT_FOUND
+import com.gentooway.blog.errors.PostNotFoundException
 import com.gentooway.blog.json.PageableRequest
 import com.gentooway.blog.model.Comment
 import com.gentooway.blog.model.Post
 import com.gentooway.blog.repository.CommentRepository
 import com.gentooway.blog.repository.PostRepository
-import org.hamcrest.CoreMatchers.equalTo
-import org.hamcrest.CoreMatchers.notNullValue
+import org.hamcrest.CoreMatchers.*
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.Is
 import org.junit.jupiter.api.Test
@@ -413,5 +414,20 @@ internal class PostControllerTest : WebControllerTest() {
 
         val secondFoundPost = posts.get(1)
         assertThat(secondFoundPost.id, Is(equalTo(secondPost.id)))
+    }
+
+    @Test
+    internal fun `should receive an error message when post not found`() {
+        // when
+        val mvcResult = mvc.perform(get("/post/123/info"))
+                .andExpect(status().isBadRequest)
+                .andReturn()
+
+        // then
+        val resolvedException = mvcResult.resolvedException
+        assertThat(resolvedException, Is(instanceOf(PostNotFoundException::class.java)))
+
+        val message = resolvedException?.message
+        assertThat(message, Is(equalTo(POST_NOT_FOUND)))
     }
 }

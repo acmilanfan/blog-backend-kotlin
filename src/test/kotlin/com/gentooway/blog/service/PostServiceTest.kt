@@ -1,5 +1,6 @@
 package com.gentooway.blog.service
 
+import com.gentooway.blog.errors.PostNotFoundException
 import com.gentooway.blog.model.Post
 import com.gentooway.blog.repository.PostRepository
 import org.hamcrest.CoreMatchers.equalTo
@@ -35,7 +36,7 @@ internal class PostServiceTest {
         val executable = { postService.changeDisplayed(123L) }
 
         // then
-        assertThrows<IllegalArgumentException>(executable)
+        assertThrows<PostNotFoundException>(executable)
     }
 
     @Test
@@ -47,7 +48,7 @@ internal class PostServiceTest {
         val executable = { postService.like(123L) }
 
         // then
-        assertThrows<IllegalArgumentException>(executable)
+        assertThrows<PostNotFoundException>(executable)
     }
 
     @Test
@@ -59,7 +60,7 @@ internal class PostServiceTest {
         val executable = { postService.dislike(123L) }
 
         // then
-        assertThrows<IllegalArgumentException>(executable)
+        assertThrows<PostNotFoundException>(executable)
     }
 
     @Test

@@ -1,5 +1,7 @@
 package com.gentooway.blog.service
 
+import com.gentooway.blog.errors.CommentNotFoundException
+import com.gentooway.blog.errors.PostNotFoundException
 import com.gentooway.blog.model.Comment
 import com.gentooway.blog.model.Post
 import com.gentooway.blog.repository.CommentRepository
@@ -51,7 +53,7 @@ internal class CommentServiceTest {
         val executable = { commentService.create(123L, comment) }
 
         // then
-        assertThrows<IllegalArgumentException>(executable)
+        assertThrows<PostNotFoundException>(executable)
     }
 
     @Test
@@ -63,7 +65,7 @@ internal class CommentServiceTest {
         val executable = { commentService.changeDisplayed(123L) }
 
         // then
-        assertThrows<IllegalArgumentException>(executable)
+        assertThrows<CommentNotFoundException>(executable)
     }
 
     @Test
