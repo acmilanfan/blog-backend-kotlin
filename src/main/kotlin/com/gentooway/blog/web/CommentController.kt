@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*
 /**
  * Comments controller
  */
+@CrossOrigin
 @RestController
 class CommentController(private val commentService: CommentService) {
 

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*
 /**
  * Posts controller
  */
+@CrossOrigin
 @RestController
 @RequestMapping("/post")
 class PostController(private val postService: PostService) {
