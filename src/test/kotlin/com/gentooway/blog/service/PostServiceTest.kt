@@ -66,7 +66,9 @@ internal class PostServiceTest {
     @Test
     internal fun `should update post displayed value and save`() {
         // given
-        val post = Post(content = "test123",
+        val post = Post(
+                title = "test",
+                content = "test123",
                 author = "test",
                 preview = "123",
                 tags = "tag1",
@@ -88,7 +90,9 @@ internal class PostServiceTest {
     @Test
     internal fun `should increment post rating`() {
         // given
-        val post = Post(content = "test123",
+        val post = Post(
+                title = "test",
+                content = "test123",
                 author = "test",
                 preview = "123",
                 tags = "tag1",
@@ -110,7 +114,9 @@ internal class PostServiceTest {
     @Test
     internal fun `should decrement post rating`() {
         // given
-        val post = Post(content = "test123",
+        val post = Post(
+                title = "test",
+                content = "test123",
                 author = "test",
                 preview = "123",
                 tags = "tag1",
@@ -132,7 +138,9 @@ internal class PostServiceTest {
     @Test
     internal fun `should not decrement if post rating is zero`() {
         // given
-        val post = Post(content = "test123",
+        val post = Post(
+                title = "test",
+                content = "test123",
                 author = "test",
                 preview = "123",
                 tags = "tag1")

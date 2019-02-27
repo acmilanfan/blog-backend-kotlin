@@ -31,6 +31,7 @@ internal class CommentControllerTest : WebControllerTest() {
     internal fun `should save new comment`() {
         // given
         val post = Post(
+                title = "test",
                 content = "test123",
                 author = "test",
                 preview = "123",
@@ -60,6 +61,7 @@ internal class CommentControllerTest : WebControllerTest() {
     internal fun `should delete comment`() {
         // given
         val post = Post(
+                title = "test",
                 content = "test123",
                 author = "test",
                 preview = "123",
@@ -88,6 +90,7 @@ internal class CommentControllerTest : WebControllerTest() {
     internal fun `should switch comment displayed value`() {
         // given
         val post = Post(
+                title = "test",
                 content = "test123",
                 author = "test",
                 preview = "123",
@@ -117,6 +120,7 @@ internal class CommentControllerTest : WebControllerTest() {
     internal fun `should return only displayed comments by post id`() {
         // given
         val post = Post(
+                title = "test",
                 content = "test123",
                 author = "test",
                 preview = "123",
@@ -161,6 +165,7 @@ internal class CommentControllerTest : WebControllerTest() {
     internal fun `should return a sorted page with comments`() {
         // given
         val post = Post(
+                title = "test",
                 content = "test123",
                 author = "test",
                 preview = "123",
@@ -217,6 +222,7 @@ internal class CommentControllerTest : WebControllerTest() {
     internal fun `should like a comment`() {
         // given
         val post = Post(
+                title = "test",
                 content = "test123",
                 author = "test",
                 preview = "123",
@@ -247,6 +253,7 @@ internal class CommentControllerTest : WebControllerTest() {
     internal fun `should dislike a comment`() {
         // given
         val post = Post(
+                title = "test",
                 content = "test123",
                 author = "test",
                 preview = "123",

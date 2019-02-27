@@ -32,6 +32,7 @@ internal class PostControllerTest : WebControllerTest() {
     internal fun `should return all posts`() {
         // given
         val post = Post(
+                title = "test",
                 content = "test123",
                 author = "test",
                 preview = "123",
@@ -39,6 +40,7 @@ internal class PostControllerTest : WebControllerTest() {
         postRepository.save(post)
 
         val secondPost = Post(
+                title = "test",
                 content = "test321",
                 author = "test1",
                 preview = "321",
@@ -59,6 +61,7 @@ internal class PostControllerTest : WebControllerTest() {
     internal fun `should save new post`() {
         // given
         val post = Post(
+                title = "test",
                 content = "Test content",
                 author = "AShumailov",
                 preview = "321",
@@ -75,6 +78,7 @@ internal class PostControllerTest : WebControllerTest() {
         assertThat(posts.size, Is(equalTo(1)))
 
         val addedPost = posts.get(0)
+        assertThat(addedPost.title, Is(equalTo(post.title)))
         assertThat(addedPost.content, Is(equalTo(post.content)))
         assertThat(addedPost.author, Is(equalTo(post.author)))
         assertThat(addedPost.preview, Is(equalTo(post.preview)))
@@ -88,6 +92,7 @@ internal class PostControllerTest : WebControllerTest() {
     internal fun `should delete post`() {
         // given
         val post = Post(
+                title = "test",
                 content = "test123",
                 author = "test",
                 preview = "123",
@@ -107,6 +112,7 @@ internal class PostControllerTest : WebControllerTest() {
     internal fun `should update post`() {
         // given
         val post = Post(
+                title = "test",
                 content = "test123",
                 author = "test",
                 preview = "123",
@@ -115,6 +121,7 @@ internal class PostControllerTest : WebControllerTest() {
 
         val updatedPost = Post(
                 id = post.id,
+                title = "testUpdated",
                 content = "test12355555",
                 author = "test",
                 preview = "123555555",
@@ -132,6 +139,7 @@ internal class PostControllerTest : WebControllerTest() {
 
         val savedPost = posts.get(0)
         assertThat(savedPost.content, Is(equalTo(updatedPost.content)))
+        assertThat(savedPost.title, Is(equalTo(updatedPost.title)))
         assertThat(savedPost.preview, Is(equalTo(updatedPost.preview)))
         assertThat(savedPost.tags, Is(equalTo(updatedPost.tags)))
     }
@@ -142,6 +150,7 @@ internal class PostControllerTest : WebControllerTest() {
         val testAuthor = "test"
 
         val post = Post(
+                title = "test",
                 content = "test123",
                 author = testAuthor,
                 preview = "123",
@@ -149,6 +158,7 @@ internal class PostControllerTest : WebControllerTest() {
         postRepository.save(post)
 
         val secondPost = Post(
+                title = "test",
                 content = "test12355555",
                 author = "test1",
                 preview = "123555555",
@@ -172,6 +182,7 @@ internal class PostControllerTest : WebControllerTest() {
     internal fun `should switch displayed value`() {
         // given
         val post = Post(
+                title = "test",
                 content = "test123",
                 author = "test",
                 preview = "123",
@@ -195,6 +206,7 @@ internal class PostControllerTest : WebControllerTest() {
     internal fun `should return only displayed posts`() {
         // given
         val post = Post(
+                title = "test",
                 content = "test123",
                 author = "test",
                 preview = "123",
@@ -203,6 +215,7 @@ internal class PostControllerTest : WebControllerTest() {
         postRepository.save(post)
 
         val notDisplayedPost = Post(
+                title = "test",
                 content = "testewq",
                 author = "test",
                 preview = "321",
@@ -232,6 +245,7 @@ internal class PostControllerTest : WebControllerTest() {
     internal fun `should like a post`() {
         // given
         val post = Post(
+                title = "test",
                 content = "test123",
                 author = "test",
                 preview = "123",
@@ -255,6 +269,7 @@ internal class PostControllerTest : WebControllerTest() {
     internal fun `should dislike a post`() {
         // given
         val post = Post(
+                title = "test",
                 content = "test123",
                 author = "test",
                 preview = "123",
@@ -278,6 +293,7 @@ internal class PostControllerTest : WebControllerTest() {
     internal fun `should return a sorted page with posts`() {
         // given
         val post = Post(
+                title = "test",
                 content = "test123",
                 author = "1",
                 preview = "123",
@@ -286,6 +302,7 @@ internal class PostControllerTest : WebControllerTest() {
         postRepository.save(post)
 
         val secondPost = Post(
+                title = "test",
                 content = "testewq",
                 author = "3",
                 preview = "321",
@@ -294,6 +311,7 @@ internal class PostControllerTest : WebControllerTest() {
         postRepository.save(secondPost)
 
         val thirdPost = Post(
+                title = "test",
                 content = "test123",
                 author = "2",
                 preview = "123",
@@ -329,6 +347,7 @@ internal class PostControllerTest : WebControllerTest() {
     internal fun `should return full post information`() {
         // given
         val post = Post(
+                title = "test",
                 content = "test123",
                 author = "1",
                 preview = "123",
@@ -358,6 +377,7 @@ internal class PostControllerTest : WebControllerTest() {
     internal fun `should return posts sorted by popularity`() {
         // given
         val post = Post(
+                title = "test",
                 content = "test123",
                 author = "1",
                 preview = "123",
@@ -380,6 +400,7 @@ internal class PostControllerTest : WebControllerTest() {
         commentRepository.save(secondComment)
 
         val secondPost = Post(
+                title = "test",
                 content = "testewq",
                 author = "3",
                 preview = "321",

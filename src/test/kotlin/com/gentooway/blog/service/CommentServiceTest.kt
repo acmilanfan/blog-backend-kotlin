@@ -12,9 +12,12 @@ import org.hamcrest.core.Is
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.mockito.*
+import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any
+import org.mockito.InjectMocks
+import org.mockito.Mock
 import org.mockito.Mockito.*
+import org.mockito.MockitoAnnotations
 import java.util.*
 
 internal class CommentServiceTest {
@@ -36,9 +39,10 @@ internal class CommentServiceTest {
     @Test
     internal fun `should throw exception while creating comment if post not found`() {
         // given
-        Mockito.`when`(postRepository.findById(ArgumentMatchers.any())).thenReturn(Optional.empty())
+        `when`(postRepository.findById(any())).thenReturn(Optional.empty())
 
         val post = Post(
+                title = "test",
                 content = "test123",
                 author = "test",
                 preview = "123",
@@ -59,7 +63,7 @@ internal class CommentServiceTest {
     @Test
     internal fun `should throw exception if comment not found`() {
         // given
-        Mockito.`when`(commentRepository.findById(ArgumentMatchers.any())).thenReturn(Optional.empty())
+        `when`(commentRepository.findById(any())).thenReturn(Optional.empty())
 
         // when
         val executable = { commentService.changeDisplayed(123L) }
@@ -72,6 +76,7 @@ internal class CommentServiceTest {
     internal fun `should update post displayed value and save`() {
         // given
         val post = Post(
+                title = "test",
                 content = "test123",
                 author = "test",
                 preview = "123",
@@ -83,7 +88,7 @@ internal class CommentServiceTest {
                 post = post,
                 displayed = true)
 
-        `when`(commentRepository.findById(ArgumentMatchers.any())).thenReturn(Optional.ofNullable(comment))
+        `when`(commentRepository.findById(any())).thenReturn(Optional.ofNullable(comment))
 
         // when
         commentService.changeDisplayed(123L)
@@ -99,7 +104,9 @@ internal class CommentServiceTest {
     @Test
     internal fun `should increment comment rating`() {
         // given
-        val post = Post(content = "test123",
+        val post = Post(
+                title = "test",
+                content = "test123",
                 author = "test",
                 preview = "123",
                 tags = "tag1")
@@ -111,7 +118,7 @@ internal class CommentServiceTest {
                 displayed = true,
                 rating = 10)
 
-        `when`(commentRepository.findById(ArgumentMatchers.any())).thenReturn(Optional.ofNullable(comment))
+        `when`(commentRepository.findById(any())).thenReturn(Optional.ofNullable(comment))
 
         // when
         commentService.like(123L)
@@ -127,7 +134,9 @@ internal class CommentServiceTest {
     @Test
     internal fun `should decrement comment rating`() {
         // given
-        val post = Post(content = "test123",
+        val post = Post(
+                title = "test",
+                content = "test123",
                 author = "test",
                 preview = "123",
                 tags = "tag1")
@@ -155,7 +164,9 @@ internal class CommentServiceTest {
     @Test
     internal fun `should not decrement if the comment rating is zero`() {
         // given
-        val post = Post(content = "test123",
+        val post = Post(
+                title = "test",
+                content = "test123",
                 author = "test",
                 preview = "123",
                 tags = "tag1")

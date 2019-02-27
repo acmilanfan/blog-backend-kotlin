@@ -13,6 +13,8 @@ data class Post(
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         val id: Long = 0,
 
+        val title: String,
+
         val content: String,
 
         val author: String,
