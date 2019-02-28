@@ -147,8 +147,9 @@
 
                         <image>
                             <alias>database</alias>
-                            <name>postgres:11</name>
+                            <name>postgres-db-gentoowayblog:${project.version}</name>
                             <build>
+                                <from>postgres:11</from>
                                 <ports>
                                     <port>5432</port>
                                 </ports>
