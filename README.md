@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/acmilanfan/blog-backend-kotlin.svg?branch=master)](https://travis-ci.com/acmilanfan/blog-backend-kotlin)
+
 # Generic blog backend on Kotlin
 
 **Current stack:**
