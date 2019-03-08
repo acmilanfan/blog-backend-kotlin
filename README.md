@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.com/acmilanfan/blog-backend-kotlin.svg?branch=master)](https://travis-ci.com/acmilanfan/blog-backend-kotlin)
+[![codecov](https://codecov.io/gh/acmilanfan/blog-backend-kotlin/branch/master/graph/badge.svg)](https://codecov.io/gh/acmilanfan/blog-backend-kotlin)
 
 # Generic blog backend on Kotlin
 
