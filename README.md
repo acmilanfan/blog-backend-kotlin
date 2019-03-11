@@ -10,3 +10,21 @@
 * Docker-maven-plugin 0.28.0 (fabric8)
 * PostgreSQL 11.1
 * Hibernate 5.3.7
+
+# Build the project
+`./mvnw package`
+
+# Run tests
+`./mvnw test`
+
+After finishing the test you could see JaCoCo test coverage report in your target folder.
+
+Example with chromium:
+
+`chromium target/site/jacoco/index.html`
+
+# Create docker image
+`./mvnw docker:build`
+
+# Run application in docker container
+`./mvnw docker:run`
