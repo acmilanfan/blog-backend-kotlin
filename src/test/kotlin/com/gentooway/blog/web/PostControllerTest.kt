@@ -4,6 +4,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import com.gentooway.blog.errors.ExceptionDescription.Companion.POST_NOT_FOUND
 import com.gentooway.blog.errors.PostNotFoundException
 import com.gentooway.blog.json.PageableRequest
+import com.gentooway.blog.json.SearchRequest
 import com.gentooway.blog.model.Comment
 import com.gentooway.blog.model.Post
 import com.gentooway.blog.repository.CommentRepository
@@ -14,7 +15,7 @@ import org.hamcrest.core.Is
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Sort
-import org.springframework.http.MediaType
+import org.springframework.http.MediaType.APPLICATION_JSON_UTF8
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDate
@@ -69,7 +70,7 @@ internal class PostControllerTest : WebControllerTest() {
 
         // when
         mvc.perform(post("/post")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(post)))
                 .andExpect(status().isOk)
 
@@ -129,7 +130,7 @@ internal class PostControllerTest : WebControllerTest() {
 
         // when
         mvc.perform(put("/post")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(updatedPost)))
                 .andExpect(status().isOk)
 
@@ -227,7 +228,7 @@ internal class PostControllerTest : WebControllerTest() {
 
         // when
         val mvcResult = mvc.perform(post("/post/displayed")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(pageableRequest)))
                 .andExpect(status().isOk)
                 .andReturn()
@@ -327,7 +328,7 @@ internal class PostControllerTest : WebControllerTest() {
 
         // when
         val mvcResult = mvc.perform(post("/post/displayed")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(pageableRequest)))
                 .andExpect(status().isOk)
                 .andReturn()
@@ -421,7 +422,7 @@ internal class PostControllerTest : WebControllerTest() {
 
         // when
         val mvcResult = mvc.perform(post("/post/popular")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(pageableRequest)))
                 .andExpect(status().isOk)
                 .andReturn()
@@ -450,5 +451,55 @@ internal class PostControllerTest : WebControllerTest() {
 
         val message = resolvedException?.message
         assertThat(message, Is(equalTo(POST_NOT_FOUND)))
+    }
+
+    @Test
+    internal fun `should return posts by content like ignore case`() {
+        // given
+        val post = Post(
+                title = "test",
+                content = "TeSt123",
+                author = "1",
+                preview = "123",
+                tags = "tag1",
+                displayed = true)
+        postRepository.save(post)
+
+        val secondPost = Post(
+                title = "test",
+                content = "testewq",
+                author = "3",
+                preview = "321",
+                tags = "tagw",
+                displayed = true)
+        postRepository.save(secondPost)
+
+        val thirdPost = Post(
+                title = "test",
+                content = "something special",
+                author = "2",
+                preview = "123",
+                tags = "tag1",
+                displayed = true)
+        postRepository.save(thirdPost)
+
+        val searchRequest = SearchRequest(content = "test")
+
+        // when
+        val mvcResult = mvc.perform(post("/post/search")
+                .contentType(APPLICATION_JSON_UTF8)
+                .content(objectMapper.writeValueAsString(searchRequest)))
+                .andExpect(status().isOk)
+                .andReturn()
+
+        // then
+        val posts = objectMapper.readValue<List<Post>>(mvcResult.response.contentAsString)
+        assertThat(posts.size, Is(equalTo(2)))
+
+        val foundPost = posts.get(0)
+        assertThat(foundPost.id, Is(equalTo(post.id)))
+
+        val secondFoundPost = posts.get(1)
+        assertThat(secondFoundPost.id, Is(equalTo(secondPost.id)))
     }
 }

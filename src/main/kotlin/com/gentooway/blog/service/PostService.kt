@@ -3,6 +3,7 @@ package com.gentooway.blog.service
 import com.gentooway.blog.errors.ExceptionDescription.Companion.POST_NOT_FOUND
 import com.gentooway.blog.errors.PostNotFoundException
 import com.gentooway.blog.json.PageableRequest
+import com.gentooway.blog.json.SearchRequest
 import com.gentooway.blog.model.Post
 import com.gentooway.blog.repository.PostRepository
 import org.springframework.data.domain.PageRequest
@@ -72,6 +73,10 @@ class PostService(private val postRepository: PostRepository) {
         val pageRequest = PageRequest.of(request.page, request.size)
 
         return postRepository.getAllByOrderByComments(pageRequest).content
+    }
+
+    fun searchByContent(searchRequest: SearchRequest): List<Post> {
+        return postRepository.findAllByContentContainingIgnoreCase(searchRequest.content)
     }
 
     private fun retrievePost(id: Long) =

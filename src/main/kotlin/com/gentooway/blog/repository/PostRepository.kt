@@ -35,4 +35,9 @@ interface PostRepository : JpaRepository<Post, Long> {
             countQuery = "select count(p) from Post p"
     )
     fun getAllByOrderByComments(pageable: Pageable): Page<Post>
+
+    /**
+     * Returns posts by a content string like
+     */
+    fun findAllByContentContainingIgnoreCase(content: String): List<Post>
 }

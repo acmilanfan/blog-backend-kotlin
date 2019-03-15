@@ -1,6 +1,7 @@
 package com.gentooway.blog.web
 
 import com.gentooway.blog.json.PageableRequest
+import com.gentooway.blog.json.SearchRequest
 import com.gentooway.blog.model.Post
 import com.gentooway.blog.service.PostService
 import org.springframework.web.bind.annotation.*
@@ -66,5 +67,10 @@ class PostController(private val postService: PostService) {
     @PostMapping("/popular")
     fun getMostPopular(@RequestBody pageableRequest: PageableRequest): List<Post> {
         return postService.getMostPopular(pageableRequest)
+    }
+
+    @PostMapping("/search")
+    fun searchByContent(@RequestBody searchRequest: SearchRequest): List<Post> {
+        return postService.searchByContent(searchRequest)
     }
 }
