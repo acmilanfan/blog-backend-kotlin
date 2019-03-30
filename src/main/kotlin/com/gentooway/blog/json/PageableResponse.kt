@@ -7,7 +7,6 @@ import com.gentooway.blog.model.Post
  */
 data class PageableResponse(
         val content: List<Post>,
-        val page: Int,
         val totalElements: Long,
         val totalPages: Int
 )

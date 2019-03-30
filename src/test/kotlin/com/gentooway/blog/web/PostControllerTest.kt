@@ -225,7 +225,7 @@ internal class PostControllerTest : WebControllerTest() {
                 displayed = false)
         postRepository.save(notDisplayedPost)
 
-        val pageableRequest = PageableRequest(page = 0, size = 1)
+        val pageableRequest = PageableRequest(page = 1, size = 1)
 
         // when
         val mvcResult = mvc.perform(post("/post/displayed")
@@ -244,7 +244,6 @@ internal class PostControllerTest : WebControllerTest() {
         assertThat(foundPost.id, Is(equalTo(post.id)))
         assertThat(foundPost.displayed, Is(equalTo(true)))
 
-        assertThat(response.page, Is(equalTo(0)))
         assertThat(response.totalPages, Is(equalTo(1)))
         assertThat(response.totalElements, Is(equalTo(1L)))
     }
@@ -328,7 +327,7 @@ internal class PostControllerTest : WebControllerTest() {
         postRepository.save(thirdPost)
 
         val pageableRequest = PageableRequest(
-                page = 0,
+                page = 1,
                 size = 2,
                 field = "author",
                 direction = Sort.Direction.ASC)
@@ -352,7 +351,6 @@ internal class PostControllerTest : WebControllerTest() {
         val foundSecondPost = posts[1]
         assertThat(foundSecondPost.id, Is(equalTo(thirdPost.id)))
 
-        assertThat(response.page, Is(equalTo(0)))
         assertThat(response.totalPages, Is(equalTo(2)))
         assertThat(response.totalElements, Is(equalTo(3L)))
     }
@@ -430,7 +428,7 @@ internal class PostControllerTest : WebControllerTest() {
         commentRepository.save(thirdComment)
 
         val pageableRequest = PageableRequest(
-                page = 0,
+                page = 1,
                 size = 2)
 
         // when

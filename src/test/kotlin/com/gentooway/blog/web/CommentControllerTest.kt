@@ -142,7 +142,7 @@ internal class CommentControllerTest : WebControllerTest() {
         commentRepository.save(norDisplayedComment)
 
         val pageableRequest = PageableRequest(
-                page = 0,
+                page = 1,
                 size = 2)
 
         // when
@@ -195,7 +195,7 @@ internal class CommentControllerTest : WebControllerTest() {
 
 
         val pageableRequest = PageableRequest(
-                page = 0,
+                page = 1,
                 size = 2,
                 field = "author",
                 direction = Sort.Direction.ASC)

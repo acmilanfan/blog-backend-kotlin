@@ -48,13 +48,12 @@ class PostService(private val postRepository: PostRepository) {
     }
 
     fun getDisplayedPosts(request: PageableRequest): PageableResponse {
-        val pageRequest = PageRequest.of(request.page, request.size, Sort.by(request.direction, request.field))
+        val pageRequest = PageRequest.of(request.page - 1, request.size, Sort.by(request.direction, request.field))
 
         val page = postRepository.getAllByDisplayedTrue(pageRequest)
 
         return PageableResponse(
                 content = page.content,
-                page = page.number,
                 totalElements = page.totalElements,
                 totalPages = page.totalPages)
     }
@@ -77,7 +76,7 @@ class PostService(private val postRepository: PostRepository) {
     }
 
     fun getMostPopular(request: PageableRequest): List<Post> {
-        val pageRequest = PageRequest.of(request.page, request.size)
+        val pageRequest = PageRequest.of(request.page - 1, request.size)
 
         return postRepository.getAllByOrderByComments(pageRequest).content
     }

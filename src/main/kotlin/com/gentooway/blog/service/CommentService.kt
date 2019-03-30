@@ -41,7 +41,7 @@ class CommentService(private val commentRepository: CommentRepository,
     }
 
     fun getDisplayed(postId: Long, request: PageableRequest): List<Comment> {
-        val pageRequest = PageRequest.of(request.page, request.size, Sort.by(request.direction, request.field))
+        val pageRequest = PageRequest.of(request.page - 1, request.size, Sort.by(request.direction, request.field))
 
         return commentRepository.getAllByPostIdAndDisplayedTrue(postId, pageRequest).content
     }
