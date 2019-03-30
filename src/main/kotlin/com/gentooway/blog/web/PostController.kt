@@ -1,6 +1,7 @@
 package com.gentooway.blog.web
 
 import com.gentooway.blog.json.PageableRequest
+import com.gentooway.blog.json.PageableResponse
 import com.gentooway.blog.json.SearchRequest
 import com.gentooway.blog.model.Post
 import com.gentooway.blog.service.PostService
@@ -50,7 +51,7 @@ class PostController(private val postService: PostService) {
     }
 
     @PostMapping("/displayed")
-    fun getDisplayedPosts(@RequestBody pageableRequest: PageableRequest): List<Post> {
+    fun getDisplayedPosts(@RequestBody pageableRequest: PageableRequest): PageableResponse {
         return postService.getDisplayedPosts(pageableRequest)
     }
 

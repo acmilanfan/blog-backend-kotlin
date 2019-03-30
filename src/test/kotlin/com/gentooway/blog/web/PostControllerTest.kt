@@ -4,6 +4,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import com.gentooway.blog.errors.ExceptionDescription.Companion.POST_NOT_FOUND
 import com.gentooway.blog.errors.PostNotFoundException
 import com.gentooway.blog.json.PageableRequest
+import com.gentooway.blog.json.PageableResponse
 import com.gentooway.blog.json.SearchRequest
 import com.gentooway.blog.model.Comment
 import com.gentooway.blog.model.Post
@@ -78,7 +79,7 @@ internal class PostControllerTest : WebControllerTest() {
         val posts = postRepository.findAll()
         assertThat(posts.size, Is(equalTo(1)))
 
-        val addedPost = posts.get(0)
+        val addedPost = posts[0]
         assertThat(addedPost.title, Is(equalTo(post.title)))
         assertThat(addedPost.content, Is(equalTo(post.content)))
         assertThat(addedPost.author, Is(equalTo(post.author)))
@@ -138,7 +139,7 @@ internal class PostControllerTest : WebControllerTest() {
         val posts = postRepository.findAll()
         assertThat(posts.size, Is(equalTo(1)))
 
-        val savedPost = posts.get(0)
+        val savedPost = posts[0]
         assertThat(savedPost.content, Is(equalTo(updatedPost.content)))
         assertThat(savedPost.title, Is(equalTo(updatedPost.title)))
         assertThat(savedPost.preview, Is(equalTo(updatedPost.preview)))
@@ -175,7 +176,7 @@ internal class PostControllerTest : WebControllerTest() {
         val posts = objectMapper.readValue<List<Post>>(mvcResult.response.contentAsString)
         assertThat(posts.size, Is(equalTo(1)))
 
-        val foundPost = posts.get(0)
+        val foundPost = posts[0]
         assertThat(foundPost.id, Is(equalTo(post.id)))
     }
 
@@ -199,7 +200,7 @@ internal class PostControllerTest : WebControllerTest() {
         val posts = postRepository.findAll()
         assertThat(posts.size, Is(equalTo(1)))
 
-        val savedPost = posts.get(0)
+        val savedPost = posts[0]
         assertThat(savedPost.displayed, Is(equalTo(false)))
     }
 
@@ -234,12 +235,18 @@ internal class PostControllerTest : WebControllerTest() {
                 .andReturn()
 
         // then
-        val posts = objectMapper.readValue<List<Post>>(mvcResult.response.contentAsString)
+        val response = objectMapper.readValue<PageableResponse>(mvcResult.response.contentAsString)
+
+        val posts = response.content
         assertThat(posts.size, Is(equalTo(1)))
 
-        val foundPost = posts.get(0)
+        val foundPost = posts[0]
         assertThat(foundPost.id, Is(equalTo(post.id)))
         assertThat(foundPost.displayed, Is(equalTo(true)))
+
+        assertThat(response.page, Is(equalTo(0)))
+        assertThat(response.totalPages, Is(equalTo(1)))
+        assertThat(response.totalElements, Is(equalTo(1L)))
     }
 
     @Test
@@ -262,7 +269,7 @@ internal class PostControllerTest : WebControllerTest() {
         val posts = postRepository.findAll()
         assertThat(posts.size, Is(equalTo(1)))
 
-        val savedPost = posts.get(0)
+        val savedPost = posts[0]
         assertThat(savedPost.rating, Is(equalTo(2)))
     }
 
@@ -286,7 +293,7 @@ internal class PostControllerTest : WebControllerTest() {
         val posts = postRepository.findAll()
         assertThat(posts.size, Is(equalTo(1)))
 
-        val savedPost = posts.get(0)
+        val savedPost = posts[0]
         assertThat(savedPost.rating, Is(equalTo(4)))
     }
 
@@ -334,14 +341,20 @@ internal class PostControllerTest : WebControllerTest() {
                 .andReturn()
 
         // then
-        val posts = objectMapper.readValue<List<Post>>(mvcResult.response.contentAsString)
+        val response = objectMapper.readValue<PageableResponse>(mvcResult.response.contentAsString)
+
+        val posts = response.content
         assertThat(posts.size, Is(equalTo(2)))
 
-        val foundPost = posts.get(0)
+        val foundPost = posts[0]
         assertThat(foundPost.id, Is(equalTo(post.id)))
 
-        val foundSecondPost = posts.get(1)
+        val foundSecondPost = posts[1]
         assertThat(foundSecondPost.id, Is(equalTo(thirdPost.id)))
+
+        assertThat(response.page, Is(equalTo(0)))
+        assertThat(response.totalPages, Is(equalTo(2)))
+        assertThat(response.totalElements, Is(equalTo(3L)))
     }
 
     @Test
@@ -431,10 +444,10 @@ internal class PostControllerTest : WebControllerTest() {
         val posts = objectMapper.readValue<List<Post>>(mvcResult.response.contentAsString)
         assertThat(posts.size, Is(equalTo(2)))
 
-        val foundPost = posts.get(0)
+        val foundPost = posts[0]
         assertThat(foundPost.id, Is(equalTo(post.id)))
 
-        val secondFoundPost = posts.get(1)
+        val secondFoundPost = posts[1]
         assertThat(secondFoundPost.id, Is(equalTo(secondPost.id)))
     }
 
@@ -496,10 +509,10 @@ internal class PostControllerTest : WebControllerTest() {
         val posts = objectMapper.readValue<List<Post>>(mvcResult.response.contentAsString)
         assertThat(posts.size, Is(equalTo(2)))
 
-        val foundPost = posts.get(0)
+        val foundPost = posts[0]
         assertThat(foundPost.id, Is(equalTo(post.id)))
 
-        val secondFoundPost = posts.get(1)
+        val secondFoundPost = posts[1]
         assertThat(secondFoundPost.id, Is(equalTo(secondPost.id)))
     }
 }

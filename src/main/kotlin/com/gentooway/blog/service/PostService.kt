@@ -3,6 +3,7 @@ package com.gentooway.blog.service
 import com.gentooway.blog.errors.ExceptionDescription.Companion.POST_NOT_FOUND
 import com.gentooway.blog.errors.PostNotFoundException
 import com.gentooway.blog.json.PageableRequest
+import com.gentooway.blog.json.PageableResponse
 import com.gentooway.blog.json.SearchRequest
 import com.gentooway.blog.model.Post
 import com.gentooway.blog.repository.PostRepository
@@ -46,10 +47,16 @@ class PostService(private val postRepository: PostRepository) {
         postRepository.save(updated)
     }
 
-    fun getDisplayedPosts(request: PageableRequest): List<Post> {
+    fun getDisplayedPosts(request: PageableRequest): PageableResponse {
         val pageRequest = PageRequest.of(request.page, request.size, Sort.by(request.direction, request.field))
 
-        return postRepository.getAllByDisplayedTrue(pageRequest).content
+        val page = postRepository.getAllByDisplayedTrue(pageRequest)
+
+        return PageableResponse(
+                content = page.content,
+                page = page.number,
+                totalElements = page.totalElements,
+                totalPages = page.totalPages)
     }
 
     fun like(id: Long) {
